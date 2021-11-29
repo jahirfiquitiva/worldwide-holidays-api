@@ -12,12 +12,16 @@ def get_current_year():
     now = datetime.datetime.now()
     date = now.date()
     year = date.strftime("%Y")
-    return year
+    return int(year)
 
 
-def get_country_holidays(country: str, year: int):
+def remove_spaces(string):
+    return string.replace(" ", "")
+
+
+def get_country_holidays(country: str, year: int = None):
     try:
-        all_holidays = holidays.CountryHoliday(country=country, years=year, expand=True).items()
+        all_holidays = holidays.CountryHoliday(country=remove_spaces(country), years=year, expand=True).items()
         clean_holidays = []
         for date, name in sorted(all_holidays):
             names = str(regex.sub("", name)).split("[")
@@ -26,7 +30,6 @@ def get_country_holidays(country: str, year: int):
             if len(names) > 1:
                 alt_name = names[1]
                 alt_name = alt_name[:-1].strip()
-            print(default_name, alt_name)
             clean_holidays.append({
                 "date": date.isoformat(),
                 "name": default_name.strip(),
@@ -47,12 +50,11 @@ def hello_world():  # put application's code here
 def get_holidays():
     country = request.args.get('country', default='', type=str)
     year = request.args.get('year', default=get_current_year(), type=int)
-    print(country, year)
     if len(country) <= 0:
         return make_response(jsonify(error="No country or country code provided"), 400)
     country_holidays = get_country_holidays(country, year)
     if len(country_holidays) <= 0:
-        error = "No holidays found for country or country code: \"" + country + "\""
+        error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code."
         return make_response(jsonify(error=error), 404)
     return make_response(jsonify(holidays=country_holidays, count=len(country_holidays)), 200)
 
