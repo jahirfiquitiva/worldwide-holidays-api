@@ -21,7 +21,7 @@ def remove_spaces(string):
 
 def get_country_holidays(country: str, year: int = None):
     try:
-        all_holidays = holidays.CountryHoliday(country=remove_spaces(country), years=year, expand=True).items()
+        all_holidays = holidays.CountryHoliday(country=remove_spaces(country), years=year).items()
         clean_holidays = []
         for date, name in sorted(all_holidays):
             names = str(regex.sub("", name)).split("[")
