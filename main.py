@@ -48,13 +48,13 @@ def hello_world():  # put application's code here
 
 @app.route('/holidays', methods=['GET'])
 def get_holidays():
-    country = request.args.get('country', default='', type=str)
+    country = str(request.args.get('country', default='', type=str)).upper()
     year = request.args.get('year', default=get_current_year(), type=int)
     if len(country) <= 0:
         return make_response(jsonify(error="No country or country code provided"), 400)
     country_holidays = get_country_holidays(country, year)
     if len(country_holidays) <= 0:
-        error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code."
+        error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code. This code is case-sensitive"
         return make_response(jsonify(error=error), 404)
     return make_response(jsonify(holidays=country_holidays, count=len(country_holidays)), 200)
 
