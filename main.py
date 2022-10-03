@@ -24,16 +24,17 @@ def get_country_holidays(country: str, year: int = None):
         all_holidays = holidays.CountryHoliday(country=remove_spaces(country), years=year).items()
         clean_holidays = []
         for date, name in sorted(all_holidays):
-            names = str(regex.sub("", name)).split("[")
-            default_name = names[0]
+            names = str(regex.sub("", name)).strip().split("[")
+            default_name = names[0].strip()
             alt_name = None
             if len(names) > 1:
-                alt_name = names[1]
-                alt_name = alt_name[:-1].strip()
+                alt_name = names[1].strip()
+                if alt_name.endswith("]"):
+                    alt_name = alt_name[:-1].strip()
             clean_holidays.append({
                 "date": date.isoformat(),
                 "name": default_name.strip(),
-                "altName": alt_name
+                "altName": alt_name,
             })
         return clean_holidays
     except Exception as e:
