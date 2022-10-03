@@ -9,7 +9,7 @@
 
 ### Notes
 
-This app is running on [Railway](https://railway.app?referralCode=Ri5XbE) so it implies some server costs. If you would like to support the project, consider signing up on Railway using the [referral link](https://railway.app?referralCode=Ri5XbE) or [become a sponsor](https://jahir.dev/donate)
+This app is running on [Railway](https://railway.app?referralCode=Ri5XbE) so it implies some server costs. If you would like to support the project, consider signing up on Railway using the [referral link](https://railway.app?referralCode=Ri5XbE) or [becoming a sponsor](https://jahir.dev/donate)
 
 ### Details
 
