@@ -4,7 +4,7 @@
 
 `https://api.world-holidays.info/holidays?country=CO&year=2022`
 
-- country: any country [ISO code](https://www.iban.com/country-codes)
+- country: any country [ISO code](https://www.iban.com/country-codes). Some countries might not be available, check them on [python-holidays readme](https://github.com/dr-prodigy/python-holidays#available-countries)
 - year: (optional) specify a year. use the current year by default
 
 ### Notes
