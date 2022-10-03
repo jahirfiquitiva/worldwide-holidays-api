@@ -9,7 +9,7 @@
 
 ### Notes
 
-This app is using free dynos on Heroku so it might "go to sleep" if not used for a while
+This app is running on [Railway](https://railway.app?referralCode=Ri5XbE) so it implies some server costs. If you would like to support the project, considering signing up on Railway using the [referral link](https://railway.app?referralCode=Ri5XbE) or [become a sponsor](https://jahir.dev/donate)
 
 ### Details
 
