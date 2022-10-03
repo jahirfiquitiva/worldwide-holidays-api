@@ -2,7 +2,7 @@
 
 ### Usage
 
-`https://holidays-api-jf.herokuapp.com/holidays?country=CO&year=2022`
+`https://api.world-holidays.info/holidays?country=CO&year=2022`
 
 - country: any country [ISO code](https://www.iban.com/country-codes)
 - year: (optional) specify a year. use the current year by default
