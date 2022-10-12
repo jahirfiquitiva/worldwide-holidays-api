@@ -2,6 +2,7 @@ import re
 import datetime
 import holidays
 from flask import Flask, make_response, request, jsonify
+import random
 
 regex = re.compile(re.escape("(Observed)"), re.IGNORECASE)
 
@@ -44,7 +45,14 @@ def get_country_holidays(country: str, year: int = None):
 
 @app.route('/')
 def hello_world():  # put application's code here
-    return 'Hello World!'
+    mainpage = """
+    <H2>how use in localhost</H2>
+    https://127.0.0.1:{PORT}/holidays?country={CODE}&year={YEAR}
+
+    <H2>Available Countries</H2>
+    <a href="https://github.com/dr-prodigy/python-holidays#available-countries" target="_blank">available-countries</a>
+    """
+    return mainpage
 
 
 @app.route('/holidays', methods=['GET'])
@@ -63,4 +71,6 @@ def get_holidays():
 if __name__ == "__main__":
     # hoster = socket.gethostbyname(socket.gethostname())
     # app.run(host=hoster)
-    app.run()
+    port=random.randint(5000, 5500)
+
+    app.run(port=port)
