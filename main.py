@@ -48,11 +48,11 @@ def get_country_holidays(country: str, year: int = None):
         supported = holidays.list_localized_countries()
         supported_langs = supported.get(remove_spaces(country))
         alt_langs = [item for item in supported_langs if item != "en_US"] if supported_langs is not None else []
-        all_holidays = holidays.country_holidays(country=remove_spaces(country), years=year).items()
+        all_holidays = holidays.country_holidays(country=remove_spaces(country), years=year, language="en_US").items()
         localized_holidays = []
         if len(alt_langs) > 0:
             all_localized_holidays = holidays.country_holidays(country=remove_spaces(country), years=year,
-                                                                       language=alt_langs[0]).items()
+                                                               language=alt_langs[0]).items()
             if all_localized_holidays is not None:
                 localized_holidays = list(sorted(all_localized_holidays))
         clean_holidays = []
@@ -69,7 +69,8 @@ def get_country_holidays(country: str, year: int = None):
                 "name": clean_name,
                 "altName": default_name,
                 "originalName": " ".join(
-                    [clean_name, f"[{default_name}]" if clean_name != default_name else "", "(Observed)" if "observed" in name.lower() else ""]).strip(),
+                    [clean_name, f"[{default_name}]" if clean_name != default_name else "",
+                     "(Observed)" if "observed" in name.lower() else ""]).strip(),
                 "observed": "observed" in name.lower()
             })
         return remove_duplicated_holidays(clean_holidays, country)
