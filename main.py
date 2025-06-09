@@ -20,7 +20,7 @@ def remove_spaces(string):
     return string.replace(" ", "")
 
 
-def remove_duplicated_holidays(holidays_list: [], country: str):
+def remove_duplicated_holidays(holidays_list: list, country: str):
     new_dict = dict()
     for day in holidays_list:
         holiday_name = day['name']
@@ -43,7 +43,7 @@ def remove_duplicated_holidays(holidays_list: [], country: str):
     return new_array
 
 
-def get_country_holidays(country: str, year: int = None):
+def get_country_holidays(country: str, year: int = None, upcoming: bool = False):
     try:
         supported = holidays.list_localized_countries()
         supported_langs = supported.get(remove_spaces(country))
@@ -55,8 +55,12 @@ def get_country_holidays(country: str, year: int = None):
                                                                language=alt_langs[0]).items()
             if all_localized_holidays is not None:
                 localized_holidays = list(sorted(all_localized_holidays))
+        # Get the current date
+        current_date = datetime.date.today()
         clean_holidays = []
         for index, (date, name) in enumerate(sorted(all_holidays)):
+            if upcoming and date < current_date:
+                continue
             clean_name = name.split(";")[0]
             names = str(regex.sub("", clean_name)).strip().split("[")
             default_name = names[0].strip()
@@ -101,9 +105,10 @@ def hello_world():  # put application's code here
 def get_holidays():
     country = str(request.args.get('country', default='', type=str)).upper()
     year = request.args.get('year', default=get_current_year(), type=int)
+    upcoming = request.args.get('upcoming', default="false", type=str).lower() == "true"
     if len(country) <= 0:
         return make_response(jsonify(error="No country or country code provided"), 400)
-    country_holidays = get_country_holidays(country, year)
+    country_holidays = get_country_holidays(country, year, upcoming)
     if len(country_holidays) <= 0:
         error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code. This code is case-sensitive"
         return make_response(jsonify(error=error), 404)
