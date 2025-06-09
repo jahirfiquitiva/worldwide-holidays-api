@@ -1,6 +1,7 @@
 import re
 import datetime
 import holidays
+import traceback
 from flask import Flask, make_response, request, jsonify
 
 regex = re.compile(re.escape("(Observed)"), re.IGNORECASE)
@@ -44,27 +45,37 @@ def remove_duplicated_holidays(holidays_list: [], country: str):
 
 def get_country_holidays(country: str, year: int = None):
     try:
+        supported = holidays.list_localized_countries()
+        supported_langs = supported.get(remove_spaces(country))
+        alt_langs = [item for item in supported_langs if item != "en_US"] if supported_langs is not None else []
         all_holidays = holidays.country_holidays(country=remove_spaces(country), years=year).items()
+        localized_holidays = []
+        if len(alt_langs) > 0:
+            all_localized_holidays = holidays.country_holidays(country=remove_spaces(country), years=year,
+                                                                       language=alt_langs[0]).items()
+            if all_localized_holidays is not None:
+                localized_holidays = list(sorted(all_localized_holidays))
         clean_holidays = []
-        for date, name in sorted(all_holidays):
-            clean_name = name.split(",")[0]
+        for index, (date, name) in enumerate(sorted(all_holidays)):
+            clean_name = name.split(";")[0]
             names = str(regex.sub("", clean_name)).strip().split("[")
             default_name = names[0].strip()
-            alt_name = None
-            if len(names) > 1:
-                alt_name = names[1].strip()
-                if alt_name.endswith("]"):
-                    alt_name = alt_name[:-1].strip()
+            if len(localized_holidays) > 0:
+                d, localized_name = localized_holidays[index]
+                clean_localized_name_strings = localized_name.split(';')
+                clean_name = clean_localized_name_strings[0].split('(')[0].strip()
             clean_holidays.append({
                 "date": date.isoformat(),
-                "name": default_name.strip(),
-                "altName": alt_name,
-                "originalName": clean_name,
+                "name": clean_name,
+                "altName": default_name,
+                "originalName": " ".join(
+                    [clean_name, f"[{default_name}]" if clean_name != default_name else "", "(Observed)" if "observed" in name.lower() else ""]).strip(),
                 "observed": "observed" in name.lower()
             })
         return remove_duplicated_holidays(clean_holidays, country)
     except Exception as e:
         print(e)
+        traceback.print_exc()
         return []
 
 
