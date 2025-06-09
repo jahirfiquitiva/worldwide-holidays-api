@@ -66,8 +66,8 @@ def get_country_holidays(country: str, year: int = None):
                 clean_name = clean_localized_name_strings[0].split('(')[0].strip()
             clean_holidays.append({
                 "date": date.isoformat(),
-                "name": clean_name,
-                "altName": default_name,
+                "name": clean_name.split('(')[0].strip(),
+                "altName": default_name.split('(')[0].strip(),
                 "originalName": " ".join(
                     [clean_name, f"[{default_name}]" if clean_name != default_name else "",
                      "(Observed)" if "observed" in name.lower() else ""]).strip(),
