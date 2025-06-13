@@ -1,12 +1,16 @@
 import re
 import datetime
 import holidays
+import pycountry
 import traceback
 from flask import Flask, make_response, request, jsonify
 
 regex = re.compile(re.escape("(Observed)"), re.IGNORECASE)
 
 app = Flask("Holidays API")
+
+countries = list(pycountry.countries)
+countries_dict = {country.alpha_2: country for country in countries}
 
 
 def get_current_year():
@@ -112,7 +116,16 @@ def get_holidays():
     if len(country_holidays) <= 0:
         error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code. This code is case-sensitive"
         return make_response(jsonify(error=error), 404)
-    return make_response(jsonify(holidays=country_holidays, count=len(country_holidays)), 200)
+    country_obj = countries_dict[country]
+    country_data = {
+        'name': country_obj.name,
+        'officialName': country_obj.official_name,
+        'flag': country_obj.flag,
+        'alpha2': country_obj.alpha_2,
+        'alpha3': country_obj.alpha_3,
+    }
+    return make_response(
+        jsonify(holidays=country_holidays, count=len(country_holidays), country=country_data), 200)
 
 
 @app.route('/countries', methods=['GET'])

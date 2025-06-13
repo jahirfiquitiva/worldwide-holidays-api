@@ -1,3 +1,4 @@
 Flask
 holidays==0.74
 gunicorn
+pycountry
