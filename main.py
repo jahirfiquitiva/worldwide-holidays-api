@@ -91,10 +91,10 @@ def get_country_holidays(country: str, year: int = None, upcoming: bool = False)
 def get_supported_countries():
     try:
         supported_countries_and_subdivisions = holidays.list_supported_countries(True)
-        countries = []
+        supported_countries = []
         for country_code in supported_countries_and_subdivisions:
-            countries.append(country_code)
-        return countries
+            supported_countries.append(country_code)
+        return supported_countries
     except Exception as e:
         print(e)
         return []
