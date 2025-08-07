@@ -35,15 +35,20 @@ def remove_duplicated_holidays(holidays_list: list, country: str):
         if len(holiday_options) == 1:
             new_array.append(holiday_options[0])
         else:
-            observed_option = [d for d in holiday_options if d['observed']][0]
-            not_observed_option = [d for d in holiday_options if not d['observed']][0]
-            if country == "MX":
-                if holiday_name == "Año Nuevo" or holiday_name == "Día de la Independencia":
-                    new_array.append(not_observed_option)
+            try:
+                observed_option = [d for d in holiday_options if d['observed']][0]
+                not_observed_option = [d for d in holiday_options if not d['observed']][0]
+                if country == "MX":
+                    if holiday_name == "Año Nuevo" or holiday_name == "Día de la Independencia":
+                        new_array.append(not_observed_option)
+                    else:
+                        new_array.append(observed_option)
                 else:
                     new_array.append(observed_option)
-            else:
-                new_array.append(observed_option)
+            except Exception as e:
+                print(e)
+                # print(holiday_options)
+                traceback.print_exc()
     return new_array
 
 
