@@ -122,15 +122,20 @@ def get_holidays():
     if len(country_holidays) <= 0:
         error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code. This code is case-sensitive"
         return make_response(jsonify(error=error), 404)
-    country_obj = countries_dict["GB" if country == "UK" else country]
-    country_data = {
-        'name': country_obj.name,
-        'officialName': country_obj.official_name,
-        'flag': country_obj.flag,
-        'alpha2': country_obj.alpha_2,
-    }
-    return make_response(
-        jsonify(holidays=country_holidays, count=len(country_holidays), country=country_data), 200)
+    try:
+        country_obj = countries_dict["GB" if country == "UK" else country]
+        country_data = {
+            'name': country_obj.name,
+            'officialName': country_obj.official_name if hasattr(country, 'official_name') else None,
+            'flag': country_obj.flag,
+            'alpha2': country_obj.alpha_2,
+        }
+        return make_response(
+            jsonify(holidays=country_holidays, count=len(country_holidays), country=country_data), 200)
+    except Exception as e:
+        print(e)
+        error = "No holidays found for country or country code: \"" + country + "\". Try with ISO code. This code is case-sensitive"
+        return make_response(jsonify(error=error), 404)
 
 
 @app.route('/countries', methods=['GET'])
