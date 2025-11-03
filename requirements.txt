@@ -1,4 +1,4 @@
 Flask
-holidays>=0.78
+holidays>=0.83
 gunicorn
 pycountry
