@@ -85,7 +85,7 @@ def get_country_holidays(country: str, year: int = None, upcoming: bool = False)
                 "originalName": " ".join(
                     [clean_name, f"[{default_name}]" if clean_name != default_name else "",
                      "(Observed)" if "observed" in name.lower() else ""]).strip(),
-                "observed": "observed" in name.lower()
+                "observed": "observed" in name.lower(),
             })
         return remove_duplicated_holidays(clean_holidays, country)
     except Exception as e:
@@ -148,7 +148,7 @@ def get_countries():
             'alpha2': country.alpha_2,
             'flag': country.flag,
             'name': country.name,
-            'officialName': country.official_name if hasattr(country, 'official_name') else None
+            'officialName': country.official_name if hasattr(country, 'official_name') else None,
         }
         for code in supported_countries if (country := countries_dict.get(code)) is not None
     ]
