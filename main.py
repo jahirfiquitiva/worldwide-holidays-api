@@ -56,7 +56,8 @@ def get_country_holidays(country: str, year: int = None, upcoming: bool = False)
     try:
         supported = holidays.list_localized_countries()
         supported_langs = supported.get(remove_spaces(country))
-        alt_langs = [item for item in supported_langs if item != "en_US"] if supported_langs is not None else []
+        alt_langs = [item for item in supported_langs if
+                     item != "en_US" and country != "US"] if supported_langs is not None else []
         all_holidays = holidays.country_holidays(country=remove_spaces(country), years=year, language="en_US").items()
         localized_holidays = []
         if len(alt_langs) > 0:
