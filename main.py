@@ -12,6 +12,11 @@ app = Flask("Holidays API")
 countries = list(pycountry.countries)
 countries_dict = {country.alpha_2: country for country in countries}
 
+country_to_lang = {
+    'ES': 'es',  # Spain
+    'US': 'en_US',  # United States
+}
+
 
 def get_current_year():
     now = datetime.datetime.now()
@@ -56,13 +61,15 @@ def get_country_holidays(country: str, year: int = None, upcoming: bool = False)
     try:
         supported = holidays.list_localized_countries()
         supported_langs = supported.get(remove_spaces(country))
+        # print("Country:", country, "- Supported languages:", supported_langs)
         alt_langs = [item for item in supported_langs if
                      item != "en_US" and country != "US"] if supported_langs is not None else []
         all_holidays = holidays.country_holidays(country=remove_spaces(country), years=year, language="en_US").items()
         localized_holidays = []
         if len(alt_langs) > 0:
             all_localized_holidays = holidays.country_holidays(country=remove_spaces(country), years=year,
-                                                               language=alt_langs[0]).items()
+                                                               language=country_to_lang.get(country.upper(),
+                                                                                            alt_langs[0])).items()
             if all_localized_holidays is not None:
                 localized_holidays = list(sorted(all_localized_holidays))
         # Get the current date
