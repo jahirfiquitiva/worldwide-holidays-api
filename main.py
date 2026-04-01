@@ -15,6 +15,7 @@ countries_dict = {country.alpha_2: country for country in countries}
 country_to_lang = {
     'ES': 'es',  # Spain
     'US': 'en_US',  # United States
+    'PL': 'pl',  # Poland
 }
 
 
