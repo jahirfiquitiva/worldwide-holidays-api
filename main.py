@@ -31,30 +31,43 @@ def remove_spaces(string):
 
 
 def remove_duplicated_holidays(holidays_list: list, country: str):
-    new_dict = dict()
-    for day in holidays_list:
-        holiday_name = day['name']
-        new_dict[holiday_name] = []
+    unique_holidays = {}
     new_array = []
-    for holiday_name in list(new_dict.keys()):
-        holiday_options = [d for d in holidays_list if d['name'] == holiday_name]
+
+    for holiday in holidays_list:
+        holiday_name = holiday['name']
+        holiday_date = holiday['date']
+        key = (holiday_name, holiday_date)  # Create a unique key based on name and date
+
+        if key not in unique_holidays:
+            unique_holidays[key] = holiday  # Store the holiday if it's unique
+
+    for holiday in unique_holidays.values():
+        holiday_name = holiday['name']
+        holiday_date = holiday['date']
+
+        # Check if there are multiple holidays with the same name
+        holiday_options = [h for h in holidays_list if h['name'] == holiday_name and h['date'] == holiday['date']]
+
         if len(holiday_options) == 1:
             new_array.append(holiday_options[0])
         else:
             try:
-                observed_option = [d for d in holiday_options if d['observed']][0]
-                not_observed_option = [d for d in holiday_options if not d['observed']][0]
+                observed_option = [d for d in holiday_options if d['observed']]
+                not_observed_option = [d for d in holiday_options if not d['observed']]
+
                 if country == "MX":
-                    if holiday_name == "Año Nuevo" or holiday_name == "Día de la Independencia":
-                        new_array.append(not_observed_option)
+                    if holiday_name in ["Año Nuevo", "Día de la Independencia"]:
+                        # Choose the not observed option for specific holidays
+                        new_array.append(not_observed_option[0] if not_observed_option else observed_option[0])
                     else:
-                        new_array.append(observed_option)
+                        new_array.append(observed_option[0] if observed_option else not_observed_option[0])
                 else:
-                    new_array.append(observed_option)
-            except Exception as e:
-                print(e)
-                # print(holiday_options)
-                traceback.print_exc()
+                    # Default behavior for other countries
+                    new_array.append(observed_option[0] if observed_option else not_observed_option[0])
+            except IndexError:
+                print(f"No valid options for holiday: {holiday_name} on {holiday_date}")
+
     return new_array
 
 
